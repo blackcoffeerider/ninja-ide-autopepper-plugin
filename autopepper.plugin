@@ -1,0 +1,8 @@
+{
+  "url": "", 
+  "version": "0.2", 
+  "class": "AutoPepper", 
+  "module": "autopepper", 
+  "authors": "Martin Reiter (blackcoffeerider)",
+  "description" : "This plugins allows you to have your code pretty-printed\naccording to PEP8 by pressing CTRL+P.\nIt uses autopep8 as a library under the hood ;-)"
+}

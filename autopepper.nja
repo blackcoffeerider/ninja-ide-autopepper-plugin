@@ -1,0 +1,21 @@
+{
+  "mainFile": "", 
+  "use-tabs": false, 
+  "venv": "/home/martinix/autopepper-env/bin/python", 
+  "relatedProjects": [], 
+  "name": "AutoPepper", 
+  "license": "GNU General Public License v3", 
+  "url": "", 
+  "pythonPath": "python", 
+  "preExecScript": "", 
+  "additional_builtins": [], 
+  "programParams": "", 
+  "indentation": 4, 
+  "PYTHONPATH": "", 
+  "supported-extensions": [
+    ".py"
+  ], 
+  "project-type": "NINJA-Plugin-Project", 
+  "postExecScript": "", 
+  "description": "Adds some Pepper to your Code -\nespecially pep8 is particulary tasty nowadays ;-)\n\nIt is basicly a re-formatter using autopep8 as a library."
+}
