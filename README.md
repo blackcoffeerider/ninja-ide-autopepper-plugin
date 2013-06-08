@@ -16,7 +16,8 @@ Current-Version: 0.3
 
 Version History
 ---------------
-0.1 - initial introduction
-0.2 - fixed error in json-plugin description leading to a freeze at startup
-0.3 - fixed the shortcut, changed it to CTRL+SHIFT+P (CTRL+P was printing)
+
+* 0.1 - initial introduction
+* 0.2 - fixed error in json-plugin description leading to a freeze at startup
+* 0.3 - fixed the shortcut, changed it to CTRL+SHIFT+P (CTRL+P was printing)
     - fixed the menu item
