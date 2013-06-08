@@ -34,7 +34,7 @@
 __version__ = ' 0.3 '
 __license__ = ' GPL '
 __author__ = ' blackcoffeerider, Belug '
-__email__ = ' blackcoffeerider@gmail.com, belug@gmail.com" '
+__email__ = ' blackcoffeerider@gmail.com, belug@oss.cx" '
 __url__ = ''
 __date__ = ' 08/06/2013 '
 __prj__ = ' autopepper '
@@ -44,9 +44,12 @@ __full_licence__ = ''
 
 
 # imports
+import os
+
 import autopep8
 
 from PyQt4.QtGui import QAction
+from PyQt4.QtGui import QIcon
 from PyQt4.QtCore import SIGNAL
 from PyQt4.QtCore import QObject
 from PyQt4 import QtCore
@@ -61,6 +64,10 @@ class AutoPepper(plugin.Plugin):
         # Init your plugin
         self.editor_s = self.locator.get_service('editor')
         self.menuApp_s = self.locator.get_service('menuApp')
+        self.toolbar_s = self.locator.get_service('toolbar')
+
+        self.plug_path = os.path.dirname(self.path)
+
         self.editor_s.editorKeyPressEvent.connect(self._handle_keypress)
         self._add_menu()
 
@@ -107,6 +114,13 @@ class AutoPepper(plugin.Plugin):
         self.connect(autopep_action,
                      SIGNAL("triggered()"),
                      self._open_with_pep8)
+
+        # Adding toolbar icon
+        print self.plug_path + '/autopepper/logo.png'
+        pep_it = QAction(QIcon(self.plug_path + '/autopepper/logo.png'),
+                         'Autopep it!', self)
+        self.toolbar_s.add_action(pep_it)
+        self.connect(pep_it, SIGNAL('triggered()'), self._rewrite_pep8)
 
 
 class Emitter (QObject):
