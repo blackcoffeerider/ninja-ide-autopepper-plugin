@@ -23,10 +23,6 @@
 #
 # Initial development: blackcoffeerider
 #  Version: 0.3
-#  Known problems:
-#   [ ] The history has a blank state in between the "meessy" and the "pretty"
-#        version - this is due to the fact that there is no "instant"
-#        replacement method for all the buffer contet of the QText Control :-(
 #
 
 # metadata
@@ -48,10 +44,8 @@ import os
 
 import autopep8
 
-from PyQt4.QtGui import QAction
-from PyQt4.QtGui import QIcon
+from PyQt4.QtGui import QAction, QIcon
 from PyQt4.QtCore import SIGNAL
-from PyQt4.QtCore import QObject
 from PyQt4 import QtCore
 from ninja_ide.core import plugin
 
@@ -101,12 +95,13 @@ class AutoPepper(plugin.Plugin):
     def _rewrite_pep8(self):
         editorWidget = self.editor_s.get_editor()
         if editorWidget:
+            last_cursor_pos = editorWidget.get_cursor_position()
+
             source = self.editor_s.get_text()
             fixed_source = autopep8.fix_string(source)
-            emi = Emitter(editorWidget)
-            emi.emitClearToText()
+            editorWidget.document().setPlainText(fixed_source)
 
-            self.editor_s.insert_text(fixed_source)
+            editorWidget.set_cursor_position(last_cursor_pos)
 
     def _add_menu(self):
         autopep_action = QAction("Open with more Pep8", self)
@@ -116,21 +111,7 @@ class AutoPepper(plugin.Plugin):
                      self._open_with_pep8)
 
         # Adding toolbar icon
-        print self.plug_path + '/autopepper/logo.png'
         pep_it = QAction(QIcon(self.plug_path + '/autopepper/logo.png'),
                          'Autopep it!', self)
         self.toolbar_s.add_action(pep_it)
         self.connect(pep_it, SIGNAL('triggered()'), self._rewrite_pep8)
-
-
-class Emitter (QObject):
-
-    def __init__(self, textobj):
-        QObject.__init__(self)
-        self.textobj = textobj
-        QObject.connect(self, SIGNAL("void_sellall()"), textobj.selectAll)
-        QObject.connect(self, SIGNAL("void_cut()"), textobj.cut)
-
-    def emitClearToText(self):
-        self.emit(SIGNAL("void_sellall()"))
-        self.emit(SIGNAL("void_cut()"))
