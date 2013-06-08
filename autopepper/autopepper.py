@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 # autopepper.py
-###############################################################################
+#
 # Copyright (C) ninja-ide.org
 #
 # This program is free software: you can redistribute it and/or modify
@@ -15,49 +15,48 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-###############################################################################
+#
 #
 #  This plugins allows you to have your code pretty-printed
-#   according to PEP8 by pressing CTRL+P.
+#   according to PEP8 by pressing CTRL+SHIFT+P.
 #  It uses autopep8 as a library under the hood ;-)
 #
 # Initial development: blackcoffeerider
-#  Version: 0.2
+#  Version: 0.3
 #  Known problems:
-#   [ ] Shortcut is not configurable
-#   [ ] Toolbar doesn't work - altough code is executed
 #   [ ] The history has a blank state in between the "meessy" and the "pretty"
 #        version - this is due to the fact that there is no "instant"
 #        replacement method for all the buffer contet of the QText Control :-(
-###############################################################################
+#
 
 # metadata
 " AutoPepper "
-__version__ = ' 0.2 '
+__version__ = ' 0.3 '
 __license__ = ' GPL '
-__author__ = ' blackcoffeerider '
-__email__ = ' blackcoffeerider@gmail.com '
+__author__ = ' blackcoffeerider, Belug '
+__email__ = ' blackcoffeerider@gmail.com, belug@gmail.com" '
 __url__ = ''
-__date__ = ' 01/05/2013 '
+__date__ = ' 08/06/2013 '
 __prj__ = ' autopepper '
 __docformat__ = 'html'
 __source__ = ''
 __full_licence__ = ''
 
 
-#imports
+# imports
 import autopep8
 
-from PyQt4.QtGui import QMenu
+from PyQt4.QtGui import QAction
 from PyQt4.QtCore import SIGNAL
 from PyQt4.QtCore import QObject
 from PyQt4 import QtCore
 from ninja_ide.core import plugin
 
-###############################################################################
+# Plugin definition
 
 
 class AutoPepper(plugin.Plugin):
+
     def initialize(self):
         # Init your plugin
         self.editor_s = self.locator.get_service('editor')
@@ -74,8 +73,13 @@ class AutoPepper(plugin.Plugin):
         pass
 
     def _handle_keypress(self, event):
-        is_shortcut = (event.modifiers() == QtCore.Qt.ControlModifier and
-                       event.key() == QtCore.Qt.Key_P)
+
+        keyMod = event.modifiers()
+
+        is_SHIFT = keyMod & QtCore.Qt.ShiftModifier
+        is_CTRL = keyMod & QtCore.Qt.ControlModifier
+
+        is_shortcut = (is_SHIFT and is_CTRL and event.key() == QtCore.Qt.Key_P)
         if is_shortcut:
             self._rewrite_pep8()
         return
@@ -98,22 +102,15 @@ class AutoPepper(plugin.Plugin):
             self.editor_s.insert_text(fixed_source)
 
     def _add_menu(self):
-        menu = AutoPepperMenu(self.locator, self)
-        self.menuApp_s.add_menu(menu)
-
-
-class AutoPepperMenu(QMenu):
-
-    def __init__(self, locator, parent):
-        QMenu.__init__(self, 'AutoPepper')
-        self._locator = locator
-        action_addpepper_new_file = self.addAction('Open with more Pep8')
-        self.connect(action_addpepper_new_file,
+        autopep_action = QAction("Open with more Pep8", self)
+        self.menuApp_s.add_action(autopep_action)
+        self.connect(autopep_action,
                      SIGNAL("triggered()"),
-                     parent._open_with_pep8)
+                     self._open_with_pep8)
 
 
 class Emitter (QObject):
+
     def __init__(self, textobj):
         QObject.__init__(self)
         self.textobj = textobj
