@@ -99,7 +99,8 @@ class AutoPepper(plugin.Plugin):
 
             source = self.editor_s.get_text()
             fixed_source = autopep8.fix_string(source)
-            editorWidget.document().setPlainText(fixed_source)
+            editorWidget.selectAll()
+            editorWidget.textCursor().insertText(fixed_source)
 
             editorWidget.set_cursor_position(last_cursor_pos)
 
