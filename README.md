@@ -19,3 +19,4 @@ Version History
       - fixed the menu item
       - fixed the flashing and the blank state.
       - Fixed the cursor position changing
+      - Added python file validation (only with valid file extentions)

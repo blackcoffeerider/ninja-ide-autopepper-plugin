@@ -47,7 +47,10 @@ import autopep8
 from PyQt4.QtGui import QAction, QIcon
 from PyQt4.QtCore import SIGNAL
 from PyQt4 import QtCore
+
 from ninja_ide.core import plugin
+from ninja_ide.core import file_manager
+from ninja_ide.core import settings
 
 # Plugin definition
 
@@ -86,23 +89,31 @@ class AutoPepper(plugin.Plugin):
         return
 
     def _open_with_pep8(self):
-        editorWidget = self.editor_s.get_editor()
-        if editorWidget:
-            source = self.editor_s.get_text()
-            fixed_source = autopep8.fix_string(source)
-            self.editor_s.add_editor("", fixed_source, "py")
+        exts = settings.SYNTAX.get('python')['extension']
+        file_ext = file_manager.get_file_extension(
+            self.editor_s.get_editor_path())
+        if file_ext in exts:
+            editorWidget = self.editor_s.get_editor()
+            if editorWidget:
+                source = self.editor_s.get_text()
+                fixed_source = autopep8.fix_string(source)
+                self.editor_s.add_editor("", fixed_source, "py")
 
     def _rewrite_pep8(self):
-        editorWidget = self.editor_s.get_editor()
-        if editorWidget:
-            last_cursor_pos = editorWidget.get_cursor_position()
+        exts = settings.SYNTAX.get('python')['extension']
+        file_ext = file_manager.get_file_extension(
+            self.editor_s.get_editor_path())
+        if file_ext in exts:
+            editorWidget = self.editor_s.get_editor()
+            if editorWidget:
+                last_cursor_pos = editorWidget.get_cursor_position()
 
-            source = self.editor_s.get_text()
-            fixed_source = autopep8.fix_string(source)
-            editorWidget.selectAll()
-            editorWidget.textCursor().insertText(fixed_source)
+                source = self.editor_s.get_text()
+                fixed_source = autopep8.fix_string(source)
+                editorWidget.selectAll()
+                editorWidget.textCursor().insertText(fixed_source)
 
-            editorWidget.set_cursor_position(last_cursor_pos)
+                editorWidget.set_cursor_position(last_cursor_pos)
 
     def _add_menu(self):
         autopep_action = QAction("Open with more Pep8", self)
